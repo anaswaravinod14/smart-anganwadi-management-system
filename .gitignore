@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+env/
+venv/
+.venv/
+*.sqlite3
+media/
+staticfiles/
+.env
+node_modules/
+smart_anganwadi/frontend/dist/
+.vscode/
