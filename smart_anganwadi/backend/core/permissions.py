@@ -18,22 +18,6 @@ class IsWorkerRole(permissions.BasePermission):
         )
 
 
-class IsSupervisorRole(permissions.BasePermission):
-    def has_permission(self, request, view):
-        return bool(
-            request.user and
-            request.user.is_authenticated and
-            request.user.role in ['supervisor', 'admin']
-        )
-
-
-class IsWorkerOrSupervisor(permissions.BasePermission):
-    def has_permission(self, request, view):
-        return bool(
-            request.user and
-            request.user.is_authenticated and
-            request.user.role in ['worker', 'supervisor', 'admin']
-        )
 
 
 class IsParentRole(permissions.BasePermission):
@@ -48,7 +32,7 @@ class IsParentRole(permissions.BasePermission):
 class RoleBasedAccessPermission(permissions.BasePermission):
     """
     Allow read-only for parents if accessing their child's info.
-    Workers and Supervisors can write their domain models.
+    Workers can write their domain models.
     Admins have full access.
     """
     def has_permission(self, request, view):

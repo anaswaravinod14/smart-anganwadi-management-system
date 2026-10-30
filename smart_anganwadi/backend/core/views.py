@@ -25,7 +25,7 @@ from .serializers import (
     NotificationSerializer
 )
 from .permissions import (
-    IsAdminRole, IsWorkerOrSupervisor, RoleBasedAccessPermission
+    IsAdminRole, IsWorkerRole, RoleBasedAccessPermission
 )
 
 User = get_user_model()
@@ -56,10 +56,6 @@ class CurrentUserView(views.APIView):
 
         if request.user.role == 'worker':
             center = request.user.assigned_centers.first()
-            if center:
-                data['center'] = {'id': center.id, 'name': center.center_name, 'code': center.center_code}
-        elif request.user.role == 'supervisor':
-            center = request.user.supervised_centers.first()
             if center:
                 data['center'] = {'id': center.id, 'name': center.center_name, 'code': center.center_code}
         elif request.user.role == 'parent' and hasattr(request.user, 'parent_profile'):
@@ -113,10 +109,6 @@ class AnganwadiCenterViewSet(viewsets.ModelViewSet):
             assigned = user.assigned_centers.all()
             if assigned.exists():
                 return assigned
-        elif user.role == 'supervisor':
-            supervised = user.supervised_centers.all()
-            if supervised.exists():
-                return supervised
         return qs
 
 
@@ -505,10 +497,6 @@ class DashboardStatsView(views.APIView):
             assigned = user.assigned_centers.first()
             if assigned:
                 center_filter = Q(anganwadi_center=assigned)
-        elif user.role == 'supervisor':
-            supervised = user.supervised_centers.first()
-            if supervised:
-                center_filter = Q(anganwadi_center=supervised)
 
         if user.role == 'parent':
             child = getattr(user.parent_profile, 'child', None) if hasattr(user, 'parent_profile') else None
@@ -537,7 +525,7 @@ class DashboardStatsView(views.APIView):
                 'recent_health_issues': child.health_records.count(),
             })
 
-        # For Admin, Worker, Supervisor
+        # For Admin and Worker
         children_qs = Child.objects.filter(center_filter, active=True)
         total_children = children_qs.count()
 
@@ -580,8 +568,6 @@ class DashboardStatsView(views.APIView):
         stock_filter = Q()
         if user.role == 'worker' and user.assigned_centers.exists():
             stock_filter = Q(anganwadi_center=user.assigned_centers.first())
-        elif user.role == 'supervisor' and user.supervised_centers.exists():
-            stock_filter = Q(anganwadi_center__in=user.supervised_centers.all())
 
         low_food_stock = FoodStock.objects.filter(
             stock_filter,

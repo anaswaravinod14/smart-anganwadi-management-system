@@ -21,7 +21,7 @@ class UserAdmin(BaseUserAdmin):
 
 @admin.register(AnganwadiCenter)
 class AnganwadiCenterAdmin(admin.ModelAdmin):
-    list_display = ['center_name', 'center_code', 'location', 'worker', 'supervisor', 'contact_number']
+    list_display = ['center_name', 'center_code', 'location', 'worker', 'contact_number']
     search_fields = ['center_name', 'center_code', 'location']
     list_filter = ['location']
 

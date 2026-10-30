@@ -87,7 +87,6 @@ const UserManagement = () => {
   const getRoleBadge = (role) => {
     switch (role) {
       case 'admin': return <span className="badge badge-danger"><ShieldCheck size={12} /> Admin</span>;
-      case 'supervisor': return <span className="badge badge-info"><Building2 size={12} /> Supervisor</span>;
       case 'worker': return <span className="badge badge-success"><Baby size={12} /> Worker</span>;
       default: return <span className="badge badge-warning"><UserIcon size={12} /> Parent</span>;
     }
@@ -100,7 +99,7 @@ const UserManagement = () => {
         <div>
           <h1 style={{ fontSize: '1.6rem', fontWeight: 800 }}>User & Staff Management</h1>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>
-            System Access Roles • Anganwadi Workers • Supervisors • Parent Accounts
+            System Access Roles • Anganwadi Workers • Parent Accounts
           </p>
         </div>
 
@@ -134,7 +133,6 @@ const UserManagement = () => {
               <option value="">All Access Roles</option>
               <option value="admin">Administrators</option>
               <option value="worker">Anganwadi Workers</option>
-              <option value="supervisor">Supervisors</option>
               <option value="parent">Parents</option>
             </select>
           </div>
@@ -250,7 +248,6 @@ const UserManagement = () => {
                 onChange={(e) => setFormData({ ...formData, role: e.target.value })}
               >
                 <option value="worker">Anganwadi Worker</option>
-                <option value="supervisor">Supervisor</option>
                 <option value="admin">Administrator</option>
                 <option value="parent">Parent</option>
               </select>

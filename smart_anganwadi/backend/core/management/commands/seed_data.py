@@ -45,19 +45,6 @@ class Command(BaseCommand):
         worker_user.set_password('worker123')
         worker_user.save()
 
-        supervisor_user, _ = User.objects.get_or_create(
-            username='supervisor_anita',
-            defaults={
-                'email': 'anita.deshmukh@sams.gov.in',
-                'first_name': 'Anita',
-                'last_name': 'Deshmukh',
-                'role': 'supervisor',
-                'phone': '9823456789'
-            }
-        )
-        supervisor_user.set_password('supervisor123')
-        supervisor_user.save()
-
         parent_user, _ = User.objects.get_or_create(
             username='parent_rajesh',
             defaults={
@@ -81,12 +68,10 @@ class Command(BaseCommand):
                 'location': 'Ward 4, Shanti Nagar, Block B',
                 'address': 'Plot 45, Near Primary Health Sub-Centre, Shanti Nagar',
                 'worker': worker_user,
-                'supervisor': supervisor_user,
                 'contact_number': '011-23456781'
             }
         )
         center1.worker = worker_user
-        center1.supervisor = supervisor_user
         center1.save()
 
         center2, _ = AnganwadiCenter.objects.get_or_create(
@@ -96,11 +81,9 @@ class Command(BaseCommand):
                 'location': 'Sector 9, Gandhi Basti, North Zone',
                 'address': 'Community Hall Compound, Gandhi Basti',
                 'worker': None,
-                'supervisor': supervisor_user,
                 'contact_number': '011-23456782'
             }
         )
-        center2.supervisor = supervisor_user
         center2.save()
 
         self.stdout.write(self.style.SUCCESS('Anganwadi centers seeded.'))
@@ -672,7 +655,6 @@ class Command(BaseCommand):
             (admin_user, 'Monthly ICDS Report Ready', 'The consolidated district nutrition and attendance report for this month is ready for download.', 'General'),
             (worker_user, 'Urgent: Vaccine Overdue for Diya Kumari', 'Diya Kumari (CHD-104) has missed Measles-Rubella dose. Please contact parents.', 'Vaccination'),
             (worker_user, 'Low Stock Alert: Wheat & Moong Dal', 'Wheat Flour is below minimum threshold (12 kg left). Place indent with district warehouse.', 'Nutrition'),
-            (supervisor_user, 'Inspection Summary: 2 Centers Reporting', 'Both Asha Kiran Kendra and Prabhat Kendra have completed daily attendance.', 'Attendance'),
             (parent_user, 'Aarav Verma - DPT Booster Upcoming', 'Reminder: Aarav has his DPT Booster vaccination due next Wednesday at Asha Kiran Kendra.', 'Vaccination'),
             (parent_user, 'Today Menu: Nutritious Khichdi', 'Today meal: Hot cooked Moong Dal Khichdi with fresh spinach and boiled egg.', 'Nutrition'),
         ]

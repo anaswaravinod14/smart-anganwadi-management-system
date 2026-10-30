@@ -36,18 +36,6 @@ const Sidebar = ({ isOpen, onClose }) => {
         { label: 'User Management', to: '/admin/users', icon: Users },
         { label: 'Reports & Export', to: '/admin/reports', icon: FileBarChart2 },
       ];
-    } else if (role === 'supervisor') {
-      return [
-        { label: 'Supervisor Dashboard', to: '/supervisor/dashboard', icon: LayoutDashboard },
-        { label: 'Center Monitoring', to: '/supervisor/centers', icon: Building2 },
-        { label: 'Children Overview', to: '/supervisor/children', icon: Baby },
-        { label: 'Attendance Reports', to: '/supervisor/attendance', icon: CalendarCheck },
-        { label: 'Growth & Malnutrition', to: '/supervisor/growth', icon: TrendingUp },
-        { label: 'Health & Risk Alerts', to: '/supervisor/alerts', icon: AlertTriangle },
-        { label: 'Pregnant Women', to: '/supervisor/pregnant-women', icon: HeartHandshake },
-        { label: 'Food Stock Audit', to: '/supervisor/food', icon: UtensilsCrossed },
-        { label: 'District Reports', to: '/supervisor/reports', icon: FileBarChart2 },
-      ];
     } else if (role === 'parent') {
       return [
         { label: 'My Child Overview', to: '/parent/dashboard', icon: LayoutDashboard },

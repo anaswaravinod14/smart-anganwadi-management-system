@@ -16,7 +16,6 @@ const CentersPage = () => {
   const { user } = useAuth();
   const [centers, setCenters] = useState([]);
   const [workers, setWorkers] = useState([]);
-  const [supervisors, setSupervisors] = useState([]);
   const [loading, setLoading] = useState(true);
 
   // Modal
@@ -27,7 +26,6 @@ const CentersPage = () => {
     location: '',
     address: '',
     worker: '',
-    supervisor: '',
     contact_number: ''
   });
 
@@ -38,14 +36,12 @@ const CentersPage = () => {
   const loadData = async () => {
     try {
       setLoading(true);
-      const [cList, wList, sList] = await Promise.all([
+      const [cList, wList] = await Promise.all([
         centerService.list(),
-        userService.list({ role: 'worker' }),
-        userService.list({ role: 'supervisor' })
+        userService.list({ role: 'worker' })
       ]);
       setCenters(cList);
       setWorkers(wList);
-      setSupervisors(sList);
     } catch (err) {
       console.error('Error loading centers:', err);
     } finally {
@@ -64,7 +60,6 @@ const CentersPage = () => {
         location: '',
         address: '',
         worker: '',
-        supervisor: '',
         contact_number: ''
       });
       loadData();
@@ -149,9 +144,9 @@ const CentersPage = () => {
                 background: 'var(--bg-app)',
                 padding: '0.85rem',
                 borderRadius: 'var(--radius-md)',
-                display: 'grid',
-                gridTemplateColumns: '1fr 1fr',
-                gap: '0.75rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
                 fontSize: '0.8rem',
                 marginBottom: '1rem'
               }}>
@@ -160,8 +155,8 @@ const CentersPage = () => {
                   <div style={{ fontWeight: 600 }}>{c.worker_name || 'Unassigned'}</div>
                 </div>
                 <div>
-                  <span className="text-muted">Supervisor:</span>
-                  <div style={{ fontWeight: 600 }}>{c.supervisor_name || 'Unassigned'}</div>
+                  <span className="text-muted">Center Code:</span>
+                  <div style={{ fontWeight: 600 }}>{c.center_code}</div>
                 </div>
               </div>
             </div>
@@ -250,33 +245,18 @@ const CentersPage = () => {
             />
           </div>
 
-          <div className="grid grid-cols-2" style={{ gap: '0.75rem' }}>
-            <div className="form-group">
-              <label className="form-label">Assign Worker</label>
-              <select
-                className="form-select"
-                value={formData.worker}
-                onChange={(e) => setFormData({ ...formData, worker: e.target.value })}
-              >
-                <option value="">-- Select Worker --</option>
-                {workers.map(w => (
-                  <option key={w.id} value={w.id}>{w.first_name} {w.last_name} ({w.username})</option>
-                ))}
-              </select>
-            </div>
-            <div className="form-group">
-              <label className="form-label">Assign Supervisor</label>
-              <select
-                className="form-select"
-                value={formData.supervisor}
-                onChange={(e) => setFormData({ ...formData, supervisor: e.target.value })}
-              >
-                <option value="">-- Select Supervisor --</option>
-                {supervisors.map(s => (
-                  <option key={s.id} value={s.id}>{s.first_name} {s.last_name} ({s.username})</option>
-                ))}
-              </select>
-            </div>
+          <div className="form-group">
+            <label className="form-label">Assign Anganwadi Worker</label>
+            <select
+              className="form-select"
+              value={formData.worker}
+              onChange={(e) => setFormData({ ...formData, worker: e.target.value })}
+            >
+              <option value="">-- Select Worker --</option>
+              {workers.map(w => (
+                <option key={w.id} value={w.id}>{w.first_name} {w.last_name} ({w.username})</option>
+              ))}
+            </select>
           </div>
 
           <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem', marginTop: '1rem' }}>

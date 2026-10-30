@@ -31,8 +31,6 @@ const Login = () => {
       // Route based on role
       if (user.role === 'admin') {
         navigate('/admin/dashboard');
-      } else if (user.role === 'supervisor') {
-        navigate('/supervisor/dashboard');
       } else if (user.role === 'parent') {
         navigate('/parent/dashboard');
       } else {
@@ -122,7 +120,7 @@ const Login = () => {
 
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(2, 1fr)',
+            gridTemplateColumns: 'repeat(3, 1fr)',
             gap: '0.5rem',
           }}>
             <button
@@ -146,18 +144,6 @@ const Login = () => {
               <div>
                 <strong>Worker</strong>
                 <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>worker_priya</div>
-              </div>
-            </button>
-
-            <button
-              type="button"
-              className="demo-pill-btn"
-              onClick={() => handleDemoClick('supervisor_anita', 'supervisor123')}
-            >
-              <Building2 size={16} color="#3b82f6" />
-              <div>
-                <strong>Supervisor</strong>
-                <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>supervisor_anita</div>
               </div>
             </button>
 

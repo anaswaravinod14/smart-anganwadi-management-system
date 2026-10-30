@@ -14,7 +14,7 @@ Anganwadi centers serve as the frontline for maternal and child healthcare in In
 - **Universal Immunization Programme (UIP) Tracker** with automated overdue dose surveillance alerts.
 - **Comprehensive Maternal & Prenatal Module** with EDD countdown, blood pressure, hemoglobin, and TT dose logs.
 - **Supplementary Nutrition Programme (SNP) & Food Inventory** with automated low-stock indent alerts.
-- **District Supervisory & Admin Dashboards** with multi-center comparisons and CSV reporting.
+- **Admin Dashboards** with multi-center comparisons and CSV reporting.
 - **Parent Portal** allowing parents to track their child's attendance, vaccines, growth milestones, and daily meal plans.
 
 ---
@@ -50,7 +50,6 @@ Visit the app at: `http://localhost:5173/`
 | :--- | :--- | :--- | :--- |
 | **Admin** | `admin` | `admin123` | Global district access |
 | **Anganwadi Worker** | `worker_priya` | `worker123` | Asha Kiran Anganwadi Kendra #12 |
-| **Supervisor** | `supervisor_anita` | `supervisor123` | Kendra #12 & Kendra #45 |
 | **Parent** | `parent_rajesh` | `parent123` | Child: Aarav Verma (CHD-101) |
 
 For complete documentation, see [smart_anganwadi/README.md](smart_anganwadi/README.md).

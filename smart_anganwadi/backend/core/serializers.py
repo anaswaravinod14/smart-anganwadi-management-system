@@ -26,10 +26,6 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
             c = user.assigned_centers.first()
             if c:
                 center = {'id': c.id, 'name': c.center_name, 'code': c.center_code}
-        elif user.role == 'supervisor':
-            c = user.supervised_centers.first()
-            if c:
-                center = {'id': c.id, 'name': c.center_name, 'code': c.center_code}
 
         linked_child = None
         if user.role == 'parent' and hasattr(user, 'parent_profile'):
@@ -84,7 +80,6 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 class AnganwadiCenterSerializer(serializers.ModelSerializer):
     worker_name = serializers.CharField(source='worker.get_full_name', read_only=True)
-    supervisor_name = serializers.CharField(source='supervisor.get_full_name', read_only=True)
     total_children = serializers.IntegerField(source='children.count', read_only=True)
     total_pregnant = serializers.IntegerField(source='pregnant_women.count', read_only=True)
 

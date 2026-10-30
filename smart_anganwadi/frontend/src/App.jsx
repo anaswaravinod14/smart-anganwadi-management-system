@@ -14,7 +14,6 @@ import ForgotPassword from './pages/ForgotPassword';
 // Role Dashboards
 import AdminDashboard from './pages/AdminDashboard';
 import WorkerDashboard from './pages/WorkerDashboard';
-import SupervisorDashboard from './pages/SupervisorDashboard';
 import ParentDashboard from './pages/ParentDashboard';
 
 // Module Pages
@@ -39,7 +38,6 @@ const HomeRedirect = () => {
   if (!token || !user) return <Navigate to="/login" replace />;
 
   if (user.role === 'admin' || user.is_superuser) return <Navigate to="/admin/dashboard" replace />;
-  if (user.role === 'supervisor') return <Navigate to="/supervisor/dashboard" replace />;
   if (user.role === 'parent') return <Navigate to="/parent/dashboard" replace />;
   return <Navigate to="/worker/dashboard" replace />;
 };
@@ -90,22 +88,6 @@ function App() {
           <Route path="/worker/food" element={<FoodNutritionPage />} />
           <Route path="/worker/activities" element={<LearningActivitiesPage />} />
           <Route path="/worker/reports" element={<ReportsPage />} />
-        </Route>
-      </Route>
-
-      {/* ---------------- Supervisor Protected Routes ---------------- */}
-      <Route element={<ProtectedRoute allowedRoles={['supervisor', 'admin']} />}>
-        <Route element={<Layout />}>
-          <Route path="/supervisor/dashboard" element={<SupervisorDashboard />} />
-          <Route path="/supervisor/centers" element={<CentersPage />} />
-          <Route path="/supervisor/children" element={<ChildrenList />} />
-          <Route path="/supervisor/children/:id" element={<ChildProfile />} />
-          <Route path="/supervisor/attendance" element={<AttendancePage />} />
-          <Route path="/supervisor/growth" element={<GrowthMonitoring />} />
-          <Route path="/supervisor/alerts" element={<AlertsPage />} />
-          <Route path="/supervisor/pregnant-women" element={<PregnantWomenPage />} />
-          <Route path="/supervisor/food" element={<FoodNutritionPage />} />
-          <Route path="/supervisor/reports" element={<ReportsPage />} />
         </Route>
       </Route>
 

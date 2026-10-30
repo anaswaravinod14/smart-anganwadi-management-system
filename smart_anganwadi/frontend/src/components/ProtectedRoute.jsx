@@ -33,7 +33,6 @@ const ProtectedRoute = ({ allowedRoles }) => {
     if (!isAllowed) {
       // Redirect to user's appropriate home dashboard
       if (user.role === 'admin') return <Navigate to="/admin/dashboard" replace />;
-      if (user.role === 'supervisor') return <Navigate to="/supervisor/dashboard" replace />;
       if (user.role === 'parent') return <Navigate to="/parent/dashboard" replace />;
       return <Navigate to="/worker/dashboard" replace />;
     }

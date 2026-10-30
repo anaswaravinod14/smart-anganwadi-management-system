@@ -57,8 +57,6 @@ const Navbar = ({ onToggleSidebar }) => {
     switch (role) {
       case 'admin':
         return <span className="badge badge-danger"><ShieldCheck size={12} /> Admin</span>;
-      case 'supervisor':
-        return <span className="badge badge-info"><Building2 size={12} /> Supervisor</span>;
       case 'worker':
         return <span className="badge badge-success"><Baby size={12} /> Anganwadi Worker</span>;
       case 'parent':

@@ -56,7 +56,7 @@ const ForgotPassword = () => {
             <CheckCircle2 size={48} color="var(--success)" style={{ margin: '0 auto 1rem' }} />
             <h3 style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>Request Received</h3>
             <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '1.5rem' }}>
-              If an account with that information exists, your Anganwadi supervisor or administrator can reset your credentials or provide an OTP.
+              If an account with that information exists, your Anganwadi administrator or worker can reset your credentials or provide an OTP.
             </p>
             <Link to="/login" className="btn btn-primary" style={{ width: '100%' }}>
               Return to Login

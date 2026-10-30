@@ -6,7 +6,6 @@ class User(AbstractUser):
     ROLE_CHOICES = (
         ('admin', 'Admin'),
         ('worker', 'Anganwadi Worker'),
-        ('supervisor', 'Supervisor'),
         ('parent', 'Parent'),
     )
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='worker')
@@ -29,14 +28,6 @@ class AnganwadiCenter(models.Model):
         blank=True,
         related_name='assigned_centers',
         limit_choices_to={'role': 'worker'}
-    )
-    supervisor = models.ForeignKey(
-        User,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name='supervised_centers',
-        limit_choices_to={'role': 'supervisor'}
     )
     contact_number = models.CharField(max_length=20, blank=True)
 

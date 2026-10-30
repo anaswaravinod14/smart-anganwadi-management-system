@@ -21,11 +21,11 @@ Anganwadi centers serve as the frontline for maternal and child healthcare in In
 
 ## 2. Features
 
-### Role-Based Access Control (4 Distinct Roles)
+### Role-Based Access Control (3 Distinct Roles)
 1. **Administrator**:
    - District-wide oversight and live mission control analytics.
-   - Anganwadi center registration and worker/supervisor assignments.
-   - User account lifecycle management (Workers, Supervisors, Parents).
+   - Anganwadi center registration and worker assignments.
+   - User account lifecycle management (Workers, Parents).
    - District compliance reports with 1-click CSV exports.
 2. **Anganwadi Worker**:
    - Fast morning attendance roll-call with bulk "Mark All Present" and individual status toggles.
@@ -35,11 +35,7 @@ Anganwadi centers serve as the frontline for maternal and child healthcare in In
    - Prenatal care checkups (BP, Weight, Hb) and maternal TT vaccinations.
    - Daily hot-cooked meal menu planning and food commodity stock updates.
    - Early Childhood Care & Education (ECCE) activity evaluation.
-3. **Supervisor**:
-   - Multi-center surveillance comparing enrollment, daily attendance rates, and malnutrition prevalence.
-   - Consolidated risk mitigation alerts (missed vaccines, SAM children, hospital referrals, low stock).
-   - Auditing center records and generating district-level CSV summaries.
-4. **Parent / Guardian**:
+3. **Parent / Guardian**:
    - Dedicated child health portal.
    - Real-time attendance percentage and monthly attendance history.
    - Longitudinal growth chart showing height & weight milestones.
@@ -121,12 +117,11 @@ smart_anganwadi/
         │   ├── ProtectedRoute.jsx
         │   └── Layout.jsx
         └── pages/
-            ├── Login.jsx    # 1-Click Demo Login Bar for all 4 roles
+            ├── Login.jsx    # 1-Click Demo Login Bar for all 3 roles
             ├── Register.jsx
             ├── ForgotPassword.jsx
             ├── AdminDashboard.jsx
             ├── WorkerDashboard.jsx
-            ├── SupervisorDashboard.jsx
             ├── ParentDashboard.jsx
             ├── ChildrenList.jsx
             ├── ChildProfile.jsx
@@ -270,7 +265,6 @@ The login page at `http://localhost:5173/login` includes **1-Click Quick Demo Lo
 | :--- | :--- | :--- | :--- |
 | **Admin** | `admin` | `admin123` | Global district access |
 | **Anganwadi Worker** | `worker_priya` | `worker123` | Asha Kiran Anganwadi Kendra #12 |
-| **Supervisor** | `supervisor_anita` | `supervisor123` | Kendra #12 & Kendra #45 |
 | **Parent** | `parent_rajesh` | `parent123` | Child: Aarav Verma (CHD-101) |
 
 ---
