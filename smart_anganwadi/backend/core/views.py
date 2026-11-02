@@ -58,6 +58,10 @@ class CurrentUserView(views.APIView):
             center = request.user.assigned_centers.first()
             if center:
                 data['center'] = {'id': center.id, 'name': center.center_name, 'code': center.center_code}
+        elif request.user.role == 'teacher':
+            center = request.user.teaching_centers.first()
+            if center:
+                data['center'] = {'id': center.id, 'name': center.center_name, 'code': center.center_code}
         elif request.user.role == 'parent' and hasattr(request.user, 'parent_profile'):
             if request.user.parent_profile.child:
                 data['linked_child'] = {
@@ -109,6 +113,10 @@ class AnganwadiCenterViewSet(viewsets.ModelViewSet):
             assigned = user.assigned_centers.all()
             if assigned.exists():
                 return assigned
+        elif user.role == 'teacher':
+            taught = user.teaching_centers.all()
+            if taught.exists():
+                return taught
         return qs
 
 
@@ -133,6 +141,10 @@ class ChildViewSet(viewsets.ModelViewSet):
             assigned_center = user.assigned_centers.first()
             if assigned_center:
                 qs = qs.filter(anganwadi_center=assigned_center)
+        elif user.role == 'teacher':
+            taught_center = user.teaching_centers.first()
+            if taught_center:
+                qs = qs.filter(anganwadi_center=taught_center)
 
         gender = self.request.query_params.get('gender')
         if gender:
@@ -197,6 +209,10 @@ class AttendanceViewSet(viewsets.ModelViewSet):
             assigned = user.assigned_centers.first()
             if assigned:
                 qs = qs.filter(child__anganwadi_center=assigned)
+        elif user.role == 'teacher':
+            taught = user.teaching_centers.first()
+            if taught:
+                qs = qs.filter(child__anganwadi_center=taught)
 
         att_date = self.request.query_params.get('date')
         if att_date:
@@ -261,6 +277,14 @@ class GrowthRecordViewSet(viewsets.ModelViewSet):
         center_id = self.request.query_params.get('center')
         if center_id:
             qs = qs.filter(child__anganwadi_center_id=center_id)
+        elif user.role == 'worker':
+            assigned = user.assigned_centers.first()
+            if assigned:
+                qs = qs.filter(child__anganwadi_center=assigned)
+        elif user.role == 'teacher':
+            taught = user.teaching_centers.first()
+            if taught:
+                qs = qs.filter(child__anganwadi_center=taught)
 
         return qs
 
@@ -290,6 +314,14 @@ class ImmunizationViewSet(viewsets.ModelViewSet):
         center_id = self.request.query_params.get('center')
         if center_id:
             qs = qs.filter(child__anganwadi_center_id=center_id)
+        elif user.role == 'worker':
+            assigned = user.assigned_centers.first()
+            if assigned:
+                qs = qs.filter(child__anganwadi_center=assigned)
+        elif user.role == 'teacher':
+            taught = user.teaching_centers.first()
+            if taught:
+                qs = qs.filter(child__anganwadi_center=taught)
 
         return qs
 
@@ -319,6 +351,14 @@ class HealthRecordViewSet(viewsets.ModelViewSet):
         center_id = self.request.query_params.get('center')
         if center_id:
             qs = qs.filter(child__anganwadi_center_id=center_id)
+        elif user.role == 'worker':
+            assigned = user.assigned_centers.first()
+            if assigned:
+                qs = qs.filter(child__anganwadi_center=assigned)
+        elif user.role == 'teacher':
+            taught = user.teaching_centers.first()
+            if taught:
+                qs = qs.filter(child__anganwadi_center=taught)
 
         return qs
 
@@ -456,6 +496,14 @@ class ChildActivityViewSet(viewsets.ModelViewSet):
         child_id = self.request.query_params.get('child')
         if child_id:
             qs = qs.filter(child_id=child_id)
+        elif user.role == 'worker':
+            assigned = user.assigned_centers.first()
+            if assigned:
+                qs = qs.filter(child__anganwadi_center=assigned)
+        elif user.role == 'teacher':
+            taught = user.teaching_centers.first()
+            if taught:
+                qs = qs.filter(child__anganwadi_center=taught)
         return qs
 
 
@@ -497,6 +545,10 @@ class DashboardStatsView(views.APIView):
             assigned = user.assigned_centers.first()
             if assigned:
                 center_filter = Q(anganwadi_center=assigned)
+        elif user.role == 'teacher':
+            taught = user.teaching_centers.first()
+            if taught:
+                center_filter = Q(anganwadi_center=taught)
 
         if user.role == 'parent':
             child = getattr(user.parent_profile, 'child', None) if hasattr(user, 'parent_profile') else None
@@ -568,6 +620,8 @@ class DashboardStatsView(views.APIView):
         stock_filter = Q()
         if user.role == 'worker' and user.assigned_centers.exists():
             stock_filter = Q(anganwadi_center=user.assigned_centers.first())
+        elif user.role == 'teacher' and user.teaching_centers.exists():
+            stock_filter = Q(anganwadi_center=user.teaching_centers.first())
 
         low_food_stock = FoodStock.objects.filter(
             stock_filter,
@@ -605,6 +659,8 @@ class DashboardChartsView(views.APIView):
         center_filter = Q()
         if user.role == 'worker' and user.assigned_centers.exists():
             center_filter = Q(anganwadi_center=user.assigned_centers.first())
+        elif user.role == 'teacher' and user.teaching_centers.exists():
+            center_filter = Q(anganwadi_center=user.teaching_centers.first())
 
         children = Child.objects.filter(center_filter, active=True)
 
@@ -752,6 +808,13 @@ class ReportExportCSVView(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
+        user = request.user
+        center = None
+        if user.role == 'worker' and user.assigned_centers.exists():
+            center = user.assigned_centers.first()
+        elif user.role == 'teacher' and user.teaching_centers.exists():
+            center = user.teaching_centers.first()
+
         report_type = request.query_params.get('type', 'children')
         response = HttpResponse(content_type='text/csv')
 
@@ -759,7 +822,10 @@ class ReportExportCSVView(views.APIView):
             response['Content-Disposition'] = 'attachment; filename="sams_attendance_report.csv"'
             writer = csv.writer(response)
             writer.writerow(['Date', 'Child ID', 'Child Name', 'Center', 'Status', 'Remarks'])
-            records = Attendance.objects.select_related('child', 'child__anganwadi_center').all().order_by('-date')[:500]
+            records = Attendance.objects.select_related('child', 'child__anganwadi_center').all().order_by('-date')
+            if center:
+                records = records.filter(child__anganwadi_center=center)
+            records = records[:500]
             for r in records:
                 writer.writerow([r.date, r.child.child_id, r.child.name, r.child.anganwadi_center.center_name, r.status, r.remarks])
 
@@ -767,7 +833,10 @@ class ReportExportCSVView(views.APIView):
             response['Content-Disposition'] = 'attachment; filename="sams_growth_report.csv"'
             writer = csv.writer(response)
             writer.writerow(['Date', 'Child ID', 'Child Name', 'Gender', 'Height (cm)', 'Weight (kg)', 'BMI', 'Status', 'Remarks'])
-            records = GrowthRecord.objects.select_related('child').all().order_by('-date')[:500]
+            records = GrowthRecord.objects.select_related('child', 'child__anganwadi_center').all().order_by('-date')
+            if center:
+                records = records.filter(child__anganwadi_center=center)
+            records = records[:500]
             for r in records:
                 writer.writerow([r.date, r.child.child_id, r.child.name, r.child.gender, r.height, r.weight, r.bmi, r.growth_status, r.remarks])
 
@@ -776,6 +845,8 @@ class ReportExportCSVView(views.APIView):
             writer = csv.writer(response)
             writer.writerow(['Item Name', 'Center', 'Available Quantity', 'Unit', 'Minimum Quantity', 'Is Low Stock', 'Expiry Date'])
             records = FoodStock.objects.select_related('anganwadi_center').all()
+            if center:
+                records = records.filter(anganwadi_center=center)
             for r in records:
                 writer.writerow([r.item_name, r.anganwadi_center.center_name, r.available_quantity, r.unit, r.minimum_quantity, 'YES' if r.is_low_stock else 'NO', r.expiry_date or 'N/A'])
 
@@ -784,6 +855,8 @@ class ReportExportCSVView(views.APIView):
             writer = csv.writer(response)
             writer.writerow(['Name', 'Age', 'Phone', 'Center', 'Pregnancy Start', 'Expected Delivery', 'Risk Status', 'Remarks'])
             records = PregnantWoman.objects.select_related('anganwadi_center').all()
+            if center:
+                records = records.filter(anganwadi_center=center)
             for r in records:
                 writer.writerow([r.name, r.age, r.phone, r.anganwadi_center.center_name, r.pregnancy_start_date, r.expected_delivery_date, r.risk_status, r.remarks])
 
@@ -792,6 +865,8 @@ class ReportExportCSVView(views.APIView):
             writer = csv.writer(response)
             writer.writerow(['Child ID', 'Name', 'Gender', 'DOB', 'Parent Name', 'Parent Phone', 'Center', 'Admission Date', 'Active'])
             records = Child.objects.select_related('anganwadi_center').all()
+            if center:
+                records = records.filter(anganwadi_center=center)
             for r in records:
                 writer.writerow([r.child_id, r.name, r.gender, r.date_of_birth, r.parent_name, r.parent_phone, r.anganwadi_center.center_name, r.admission_date, 'Active' if r.active else 'Inactive'])
 

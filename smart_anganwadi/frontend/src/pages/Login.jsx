@@ -9,6 +9,7 @@ import {
   Lock, 
   LogIn, 
   Sparkles,
+  GraduationCap,
   AlertCircle
 } from 'lucide-react';
 
@@ -31,6 +32,8 @@ const Login = () => {
       // Route based on role
       if (user.role === 'admin') {
         navigate('/admin/dashboard');
+      } else if (user.role === 'teacher') {
+        navigate('/teacher/dashboard');
       } else if (user.role === 'parent') {
         navigate('/parent/dashboard');
       } else {
@@ -120,8 +123,8 @@ const Login = () => {
 
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
-            gap: '0.5rem',
+            gridTemplateColumns: 'repeat(2, 1fr)',
+            gap: '0.6rem',
           }}>
             <button
               type="button"
@@ -144,6 +147,18 @@ const Login = () => {
               <div>
                 <strong>Worker</strong>
                 <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>worker_priya</div>
+              </div>
+            </button>
+
+            <button
+              type="button"
+              className="demo-pill-btn"
+              onClick={() => handleDemoClick('teacher_meera', 'teacher123')}
+            >
+              <GraduationCap size={16} color="#6366f1" />
+              <div>
+                <strong>Teacher</strong>
+                <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>teacher_meera</div>
               </div>
             </button>
 

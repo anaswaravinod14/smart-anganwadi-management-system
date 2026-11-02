@@ -14,6 +14,7 @@ import ForgotPassword from './pages/ForgotPassword';
 // Role Dashboards
 import AdminDashboard from './pages/AdminDashboard';
 import WorkerDashboard from './pages/WorkerDashboard';
+import TeacherDashboard from './pages/TeacherDashboard';
 import ParentDashboard from './pages/ParentDashboard';
 
 // Module Pages
@@ -29,6 +30,7 @@ import LearningActivitiesPage from './pages/LearningActivitiesPage';
 import ReportsPage from './pages/ReportsPage';
 import UserManagement from './pages/UserManagement';
 import CentersPage from './pages/CentersPage';
+import TeachersPage from './pages/TeachersPage';
 import AlertsPage from './pages/AlertsPage';
 
 // Root Dispatcher: Redirects to appropriate home view based on logged-in role
@@ -38,6 +40,7 @@ const HomeRedirect = () => {
   if (!token || !user) return <Navigate to="/login" replace />;
 
   if (user.role === 'admin' || user.is_superuser) return <Navigate to="/admin/dashboard" replace />;
+  if (user.role === 'teacher') return <Navigate to="/teacher/dashboard" replace />;
   if (user.role === 'parent') return <Navigate to="/parent/dashboard" replace />;
   return <Navigate to="/worker/dashboard" replace />;
 };
@@ -59,6 +62,7 @@ function App() {
         <Route element={<Layout />}>
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
           <Route path="/admin/centers" element={<CentersPage />} />
+          <Route path="/admin/teachers" element={<TeachersPage />} />
           <Route path="/admin/children" element={<ChildrenList />} />
           <Route path="/admin/children/:id" element={<ChildProfile />} />
           <Route path="/admin/attendance" element={<AttendancePage />} />
@@ -88,6 +92,23 @@ function App() {
           <Route path="/worker/food" element={<FoodNutritionPage />} />
           <Route path="/worker/activities" element={<LearningActivitiesPage />} />
           <Route path="/worker/reports" element={<ReportsPage />} />
+        </Route>
+      </Route>
+
+      {/* ---------------- Teacher Protected Routes ---------------- */}
+      <Route element={<ProtectedRoute allowedRoles={['teacher', 'admin']} />}>
+        <Route element={<Layout />}>
+          <Route path="/teacher/dashboard" element={<TeacherDashboard />} />
+          <Route path="/teacher/children" element={<ChildrenList />} />
+          <Route path="/teacher/children/:id" element={<ChildProfile />} />
+          <Route path="/teacher/attendance" element={<AttendancePage />} />
+          <Route path="/teacher/growth" element={<GrowthMonitoring />} />
+          <Route path="/teacher/activities" element={<LearningActivitiesPage />} />
+          <Route path="/teacher/immunizations" element={<ImmunizationTracker />} />
+          <Route path="/teacher/health" element={<HealthRecordsPage />} />
+          <Route path="/teacher/food" element={<FoodNutritionPage />} />
+          <Route path="/teacher/reports" element={<ReportsPage />} />
+          <Route path="/teacher/alerts" element={<AlertsPage />} />
         </Route>
       </Route>
 

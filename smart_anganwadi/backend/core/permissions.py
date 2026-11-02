@@ -16,9 +16,13 @@ class IsWorkerRole(permissions.BasePermission):
             request.user.is_authenticated and
             request.user.role in ['worker', 'admin']
         )
-
-
-
+class IsTeacherRole(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return bool(
+            request.user and
+            request.user.is_authenticated and
+            request.user.role in ['teacher', 'admin']
+        )
 
 class IsParentRole(permissions.BasePermission):
     def has_permission(self, request, view):

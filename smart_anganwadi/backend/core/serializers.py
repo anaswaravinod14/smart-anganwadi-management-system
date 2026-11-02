@@ -26,6 +26,10 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
             c = user.assigned_centers.first()
             if c:
                 center = {'id': c.id, 'name': c.center_name, 'code': c.center_code}
+        elif user.role == 'teacher':
+            c = user.teaching_centers.first()
+            if c:
+                center = {'id': c.id, 'name': c.center_name, 'code': c.center_code}
 
         linked_child = None
         if user.role == 'parent' and hasattr(user, 'parent_profile'):
@@ -52,10 +56,73 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True, required=False, min_length=6)
+    assigned_center_name = serializers.SerializerMethodField()
+    teaching_center_name = serializers.SerializerMethodField()
+    center_id = serializers.IntegerField(write_only=True, required=False, allow_null=True)
+
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'role', 'phone', 'is_active', 'date_joined']
+        fields = [
+            'id', 'username', 'email', 'first_name', 'last_name',
+            'role', 'phone', 'is_active', 'date_joined', 'password',
+            'assigned_center_name', 'teaching_center_name', 'center_id'
+        ]
         read_only_fields = ['id', 'date_joined']
+
+    def get_assigned_center_name(self, obj):
+        c = obj.assigned_centers.first()
+        return c.center_name if c else None
+
+    def get_teaching_center_name(self, obj):
+        c = obj.teaching_centers.first()
+        return c.center_name if c else None
+
+    def create(self, validated_data):
+        password = validated_data.pop('password', None)
+        center_id = validated_data.pop('center_id', None)
+        user = super().create(validated_data)
+        if password:
+            user.set_password(password)
+            user.save()
+        if center_id:
+            try:
+                center = AnganwadiCenter.objects.get(id=center_id)
+                if user.role == 'teacher':
+                    center.teacher = user
+                    center.save()
+                elif user.role == 'worker':
+                    center.worker = user
+                    center.save()
+            except AnganwadiCenter.DoesNotExist:
+                pass
+        return user
+
+    def update(self, instance, validated_data):
+        password = validated_data.pop('password', None)
+        center_id = validated_data.pop('center_id', None)
+        user = super().update(instance, validated_data)
+        if password:
+            user.set_password(password)
+            user.save()
+        if center_id is not None:
+            if center_id:
+                try:
+                    center = AnganwadiCenter.objects.get(id=center_id)
+                    if user.role == 'teacher':
+                        center.teacher = user
+                        center.save()
+                    elif user.role == 'worker':
+                        center.worker = user
+                        center.save()
+                except AnganwadiCenter.DoesNotExist:
+                    pass
+            else:
+                if user.role == 'teacher':
+                    AnganwadiCenter.objects.filter(teacher=user).update(teacher=None)
+                elif user.role == 'worker':
+                    AnganwadiCenter.objects.filter(worker=user).update(worker=None)
+        return user
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -80,6 +147,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 class AnganwadiCenterSerializer(serializers.ModelSerializer):
     worker_name = serializers.CharField(source='worker.get_full_name', read_only=True)
+    teacher_name = serializers.CharField(source='teacher.get_full_name', read_only=True)
     total_children = serializers.IntegerField(source='children.count', read_only=True)
     total_pregnant = serializers.IntegerField(source='pregnant_women.count', read_only=True)
 

@@ -85,7 +85,7 @@ const Register = () => {
             Join Smart Anganwadi
           </h1>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>
-            Register as a Parent or Anganwadi Worker
+            Register as a Parent, Teacher, or Anganwadi Worker
           </p>
         </div>
 
@@ -198,6 +198,7 @@ const Register = () => {
                 onChange={handleChange}
               >
                 <option value="parent">Parent / Guardian</option>
+                <option value="teacher">Anganwadi Teacher (ECCE)</option>
                 <option value="worker">Anganwadi Worker</option>
               </select>
             </div>

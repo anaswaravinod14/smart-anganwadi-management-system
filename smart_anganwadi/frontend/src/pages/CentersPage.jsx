@@ -16,6 +16,7 @@ const CentersPage = () => {
   const { user } = useAuth();
   const [centers, setCenters] = useState([]);
   const [workers, setWorkers] = useState([]);
+  const [teachers, setTeachers] = useState([]);
   const [loading, setLoading] = useState(true);
 
   // Modal
@@ -26,6 +27,7 @@ const CentersPage = () => {
     location: '',
     address: '',
     worker: '',
+    teacher: '',
     contact_number: ''
   });
 
@@ -36,12 +38,14 @@ const CentersPage = () => {
   const loadData = async () => {
     try {
       setLoading(true);
-      const [cList, wList] = await Promise.all([
+      const [cList, wList, tList] = await Promise.all([
         centerService.list(),
-        userService.list({ role: 'worker' })
+        userService.list({ role: 'worker' }),
+        userService.list({ role: 'teacher' })
       ]);
       setCenters(cList);
       setWorkers(wList);
+      setTeachers(tList);
     } catch (err) {
       console.error('Error loading centers:', err);
     } finally {
@@ -60,6 +64,7 @@ const CentersPage = () => {
         location: '',
         address: '',
         worker: '',
+        teacher: '',
         contact_number: ''
       });
       loadData();
@@ -144,15 +149,19 @@ const CentersPage = () => {
                 background: 'var(--bg-app)',
                 padding: '0.85rem',
                 borderRadius: 'var(--radius-md)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
+                display: 'grid',
+                gridTemplateColumns: 'repeat(3, 1fr)',
+                gap: '0.5rem',
                 fontSize: '0.8rem',
                 marginBottom: '1rem'
               }}>
                 <div>
                   <span className="text-muted">Assigned Worker:</span>
                   <div style={{ fontWeight: 600 }}>{c.worker_name || 'Unassigned'}</div>
+                </div>
+                <div>
+                  <span className="text-muted">ECCE Teacher:</span>
+                  <div style={{ fontWeight: 600 }}>{c.teacher_name || 'Unassigned'}</div>
                 </div>
                 <div>
                   <span className="text-muted">Center Code:</span>
@@ -245,18 +254,33 @@ const CentersPage = () => {
             />
           </div>
 
-          <div className="form-group">
-            <label className="form-label">Assign Anganwadi Worker</label>
-            <select
-              className="form-select"
-              value={formData.worker}
-              onChange={(e) => setFormData({ ...formData, worker: e.target.value })}
-            >
-              <option value="">-- Select Worker --</option>
-              {workers.map(w => (
-                <option key={w.id} value={w.id}>{w.first_name} {w.last_name} ({w.username})</option>
-              ))}
-            </select>
+          <div className="grid grid-cols-2" style={{ gap: '0.75rem' }}>
+            <div className="form-group">
+              <label className="form-label">Assign Anganwadi Worker</label>
+              <select
+                className="form-select"
+                value={formData.worker}
+                onChange={(e) => setFormData({ ...formData, worker: e.target.value })}
+              >
+                <option value="">-- Select Worker --</option>
+                {workers.map(w => (
+                  <option key={w.id} value={w.id}>{w.first_name} {w.last_name} ({w.username})</option>
+                ))}
+              </select>
+            </div>
+            <div className="form-group">
+              <label className="form-label">Assign ECCE Teacher</label>
+              <select
+                className="form-select"
+                value={formData.teacher}
+                onChange={(e) => setFormData({ ...formData, teacher: e.target.value })}
+              >
+                <option value="">-- Select Teacher --</option>
+                {teachers.map(t => (
+                  <option key={t.id} value={t.id}>{t.first_name} {t.last_name} ({t.username})</option>
+                ))}
+              </select>
+            </div>
           </div>
 
           <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem', marginTop: '1rem' }}>

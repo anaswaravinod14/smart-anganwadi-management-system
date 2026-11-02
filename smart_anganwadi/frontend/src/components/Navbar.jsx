@@ -9,6 +9,7 @@ import {
   ShieldCheck, 
   Building2, 
   Baby, 
+  GraduationCap,
   CheckCircle2,
   X
 } from 'lucide-react';
@@ -59,6 +60,8 @@ const Navbar = ({ onToggleSidebar }) => {
         return <span className="badge badge-danger"><ShieldCheck size={12} /> Admin</span>;
       case 'worker':
         return <span className="badge badge-success"><Baby size={12} /> Anganwadi Worker</span>;
+      case 'teacher':
+        return <span className="badge" style={{ backgroundColor: '#e0e7ff', color: '#4338ca', display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}><GraduationCap size={12} /> Teacher</span>;
       case 'parent':
         return <span className="badge badge-warning"><UserIcon size={12} /> Parent</span>;
       default:

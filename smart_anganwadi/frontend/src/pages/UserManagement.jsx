@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { userService } from '../services/api';
+import { userService, centerService } from '../services/api';
 import Modal from '../components/Modal';
 import {
   Users,
@@ -10,12 +10,14 @@ import {
   Building2,
   Baby,
   User as UserIcon,
+  GraduationCap,
   Phone,
   Mail
 } from 'lucide-react';
 
 const UserManagement = () => {
   const [users, setUsers] = useState([]);
+  const [centers, setCenters] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [roleFilter, setRoleFilter] = useState('');
@@ -30,6 +32,7 @@ const UserManagement = () => {
     last_name: '',
     role: 'worker',
     phone: '',
+    center_id: '',
   });
 
   useEffect(() => {
@@ -39,8 +42,12 @@ const UserManagement = () => {
   const loadUsers = async () => {
     try {
       setLoading(true);
-      const data = await userService.list();
-      setUsers(data);
+      const [uData, cData] = await Promise.all([
+        userService.list(),
+        centerService.list()
+      ]);
+      setUsers(uData);
+      setCenters(cData);
     } catch (err) {
       console.error('Error fetching users:', err);
     } finally {
@@ -66,7 +73,11 @@ const UserManagement = () => {
   const handleCreateUser = async (e) => {
     e.preventDefault();
     try {
-      await userService.create(formData);
+      const payload = {
+        ...formData,
+        center_id: formData.center_id ? parseInt(formData.center_id) : null
+      };
+      await userService.create(payload);
       setIsModalOpen(false);
       setFormData({
         username: '',
@@ -76,11 +87,12 @@ const UserManagement = () => {
         last_name: '',
         role: 'worker',
         phone: '',
+        center_id: '',
       });
       loadUsers();
     } catch (err) {
       console.error(err);
-      alert('Error creating user. Username might already exist.');
+      alert('Error creating user. Username might already exist or password is invalid.');
     }
   };
 
@@ -88,6 +100,7 @@ const UserManagement = () => {
     switch (role) {
       case 'admin': return <span className="badge badge-danger"><ShieldCheck size={12} /> Admin</span>;
       case 'worker': return <span className="badge badge-success"><Baby size={12} /> Worker</span>;
+      case 'teacher': return <span className="badge" style={{ backgroundColor: '#e0e7ff', color: '#4338ca', display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}><GraduationCap size={12} /> Teacher</span>;
       default: return <span className="badge badge-warning"><UserIcon size={12} /> Parent</span>;
     }
   };
@@ -133,6 +146,7 @@ const UserManagement = () => {
               <option value="">All Access Roles</option>
               <option value="admin">Administrators</option>
               <option value="worker">Anganwadi Workers</option>
+              <option value="teacher">Anganwadi Teachers (ECCE)</option>
               <option value="parent">Parents</option>
             </select>
           </div>
@@ -152,6 +166,7 @@ const UserManagement = () => {
                 <th>Username</th>
                 <th>Full Name</th>
                 <th>Assigned Role</th>
+                <th>Assigned Kendra</th>
                 <th>Email</th>
                 <th>Phone</th>
                 <th>Status</th>
@@ -161,13 +176,13 @@ const UserManagement = () => {
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan="7" style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }}>
+                  <td colSpan="8" style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }}>
                     Loading user accounts...
                   </td>
                 </tr>
               ) : users.length === 0 ? (
                 <tr>
-                  <td colSpan="7" style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }}>
+                  <td colSpan="8" style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }}>
                     No users matching criteria.
                   </td>
                 </tr>
@@ -177,6 +192,11 @@ const UserManagement = () => {
                     <td><strong>{u.username}</strong></td>
                     <td>{u.first_name} {u.last_name}</td>
                     <td>{getRoleBadge(u.role)}</td>
+                    <td>
+                      <span className="text-xs" style={{ fontWeight: 600 }}>
+                        {u.teaching_center_name || u.assigned_center_name || '-'}
+                      </span>
+                    </td>
                     <td>
                       <span className="text-xs text-muted" style={{ display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
                         <Mail size={12} /> {u.email || 'N/A'}
@@ -248,6 +268,7 @@ const UserManagement = () => {
                 onChange={(e) => setFormData({ ...formData, role: e.target.value })}
               >
                 <option value="worker">Anganwadi Worker</option>
+                <option value="teacher">Anganwadi Teacher (ECCE)</option>
                 <option value="admin">Administrator</option>
                 <option value="parent">Parent</option>
               </select>
@@ -288,6 +309,22 @@ const UserManagement = () => {
               required
             />
           </div>
+
+          {(formData.role === 'worker' || formData.role === 'teacher') && (
+            <div className="form-group">
+              <label className="form-label">Assign Anganwadi Center / Kendra</label>
+              <select
+                className="form-select"
+                value={formData.center_id}
+                onChange={(e) => setFormData({ ...formData, center_id: e.target.value })}
+              >
+                <option value="">-- Optional: Select Center --</option>
+                {centers.map(c => (
+                  <option key={c.id} value={c.id}>{c.center_name} ({c.center_code})</option>
+                ))}
+              </select>
+            </div>
+          )}
 
           <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem', marginTop: '1rem' }}>
             <button type="button" onClick={() => setIsModalOpen(false)} className="btn btn-secondary">Cancel</button>

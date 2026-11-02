@@ -50,6 +50,7 @@ Visit the app at: `http://localhost:5173/`
 | :--- | :--- | :--- | :--- |
 | **Admin** | `admin` | `admin123` | Global district access |
 | **Anganwadi Worker** | `worker_priya` | `worker123` | Asha Kiran Anganwadi Kendra #12 |
+| **Teacher (ECCE)** | `teacher_meera` | `teacher123` | Asha Kiran Anganwadi Kendra #12 |
 | **Parent** | `parent_rajesh` | `parent123` | Child: Aarav Verma (CHD-101) |
 
 For complete documentation, see [smart_anganwadi/README.md](smart_anganwadi/README.md).

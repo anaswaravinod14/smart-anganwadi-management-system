@@ -21,11 +21,11 @@ Anganwadi centers serve as the frontline for maternal and child healthcare in In
 
 ## 2. Features
 
-### Role-Based Access Control (3 Distinct Roles)
+### Role-Based Access Control (4 Distinct Roles)
 1. **Administrator**:
    - District-wide oversight and live mission control analytics.
-   - Anganwadi center registration and worker assignments.
-   - User account lifecycle management (Workers, Parents).
+   - Anganwadi center registration and staff assignments (Workers & ECCE Teachers).
+   - User account lifecycle management (Workers, Teachers, Parents).
    - District compliance reports with 1-click CSV exports.
 2. **Anganwadi Worker**:
    - Fast morning attendance roll-call with bulk "Mark All Present" and individual status toggles.
@@ -34,8 +34,13 @@ Anganwadi centers serve as the frontline for maternal and child healthcare in In
    - Immunization dose administration and overdue follow-up flags.
    - Prenatal care checkups (BP, Weight, Hb) and maternal TT vaccinations.
    - Daily hot-cooked meal menu planning and food commodity stock updates.
-   - Early Childhood Care & Education (ECCE) activity evaluation.
-3. **Parent / Guardian**:
+   - Center reports and analytical insights.
+3. **Anganwadi Teacher (ECCE)**:
+   - Early Childhood Care & Education (ECCE) curriculum tracker and daily preschool learning activities.
+   - Morning roll-call attendance register for enrolled preschoolers.
+   - Child classroom participation and developmental milestone evaluation.
+   - Child roster and background tracking.
+4. **Parent / Guardian**:
    - Dedicated child health portal.
    - Real-time attendance percentage and monthly attendance history.
    - Longitudinal growth chart showing height & weight milestones.
@@ -122,6 +127,7 @@ smart_anganwadi/
             ├── ForgotPassword.jsx
             ├── AdminDashboard.jsx
             ├── WorkerDashboard.jsx
+            ├── TeacherDashboard.jsx
             ├── ParentDashboard.jsx
             ├── ChildrenList.jsx
             ├── ChildProfile.jsx
@@ -265,6 +271,7 @@ The login page at `http://localhost:5173/login` includes **1-Click Quick Demo Lo
 | :--- | :--- | :--- | :--- |
 | **Admin** | `admin` | `admin123` | Global district access |
 | **Anganwadi Worker** | `worker_priya` | `worker123` | Asha Kiran Anganwadi Kendra #12 |
+| **Teacher (ECCE)** | `teacher_meera` | `teacher123` | Asha Kiran Anganwadi Kendra #12 |
 | **Parent** | `parent_rajesh` | `parent123` | Child: Aarav Verma (CHD-101) |
 
 ---

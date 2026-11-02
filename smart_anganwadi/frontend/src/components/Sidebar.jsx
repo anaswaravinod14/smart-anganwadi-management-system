@@ -15,6 +15,7 @@ import {
   Users,
   Building2,
   AlertTriangle,
+  GraduationCap,
   X
 } from 'lucide-react';
 
@@ -27,6 +28,7 @@ const Sidebar = ({ isOpen, onClose }) => {
       return [
         { label: 'Admin Dashboard', to: '/admin/dashboard', icon: LayoutDashboard },
         { label: 'Centers Directory', to: '/admin/centers', icon: Building2 },
+        { label: 'ECCE Teachers', to: '/admin/teachers', icon: GraduationCap },
         { label: 'Child Registry', to: '/admin/children', icon: Baby },
         { label: 'Attendance Audit', to: '/admin/attendance', icon: CalendarCheck },
         { label: 'Growth Monitoring', to: '/admin/growth', icon: TrendingUp },
@@ -35,6 +37,15 @@ const Sidebar = ({ isOpen, onClose }) => {
         { label: 'Early Activities', to: '/admin/activities', icon: Sparkles },
         { label: 'User Management', to: '/admin/users', icon: Users },
         { label: 'Reports & Export', to: '/admin/reports', icon: FileBarChart2 },
+      ];
+    } else if (role === 'teacher') {
+      return [
+        { label: 'Teacher Dashboard', to: '/teacher/dashboard', icon: LayoutDashboard },
+        { label: 'Preschool Roster', to: '/teacher/children', icon: Baby },
+        { label: 'Daily Roll Call', to: '/teacher/attendance', icon: CalendarCheck },
+        { label: 'Early Learning Plan', to: '/teacher/activities', icon: Sparkles },
+        { label: 'Growth Monitoring', to: '/teacher/growth', icon: TrendingUp },
+        { label: 'Center Reports', to: '/teacher/reports', icon: FileBarChart2 },
       ];
     } else if (role === 'parent') {
       return [
